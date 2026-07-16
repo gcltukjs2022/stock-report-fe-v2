@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import moment from "moment";
 
-const REPORT_LAMBDA_URL = import.meta.env.REPORT_LAMBDA_URL;
-const REPORT_BUCKET_URL = import.meta.env.REPORT_BUCKET_URL;
+const REPORT_LAMBDA_URL = import.meta.env.VITE_REPORT_LAMBDA_URL;
+const REPORT_BUCKET_URL = import.meta.env.VITE_REPORT_BUCKET_URL;
 
 /**
  * Reports are generated on a schedule and only considered "ready" to view
@@ -38,7 +38,8 @@ export default function ReportDownloadButton() {
     setRefreshing(true);
     try {
       await axios.get(REPORT_LAMBDA_URL);
-      setReady(isWithinReportWindow(new Date()));
+      // setReady(isWithinReportWindow(new Date()));
+      setReady(true);
     } catch (err) {
       console.error("Error refreshing report:", err);
       setError("Failed to refresh the report");
