@@ -5,10 +5,6 @@ import moment from "moment";
 const REPORT_LAMBDA_URL = import.meta.env.VITE_REPORT_LAMBDA_URL;
 const REPORT_BUCKET_URL = import.meta.env.VITE_REPORT_BUCKET_URL;
 
-/**
- * Reports are generated on a schedule and only considered "ready" to view
- * within this UTC window. Mirrors the backend job's run time.
- */
 function isWithinReportWindow(date: Date): boolean {
   const hours = date.getUTCHours();
   const minutes = date.getUTCMinutes();
@@ -21,7 +17,7 @@ function isWithinReportWindow(date: Date): boolean {
 }
 
 function getTodayReportUrl(): string {
-  return `${REPORT_BUCKET_URL}/report${moment().format("DDMMYYYY")}.docx`;
+  return `${REPORT_BUCKET_URL}/report-v3-${moment().format("DDMMYYYY")}.docx`;
 }
 
 export default function ReportDownloadButton() {
@@ -38,8 +34,7 @@ export default function ReportDownloadButton() {
     setRefreshing(true);
     try {
       await axios.get(REPORT_LAMBDA_URL);
-      // setReady(isWithinReportWindow(new Date()));
-      setReady(true);
+      setReady(isWithinReportWindow(new Date()));
     } catch (err) {
       console.error("Error refreshing report:", err);
       setError("Failed to refresh the report");
